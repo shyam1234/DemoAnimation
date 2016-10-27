@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 
 import com.malviya.demoanimation.R;
+import com.malviya.demoanimation.animation.AnimatedSprite;
 import com.malviya.demoanimation.constants.Constant;
 import com.malviya.demoanimation.interfaces.IGameRules;
 import com.malviya.demoanimation.main.GameCanvas;
@@ -53,7 +55,7 @@ public class GameWorld extends BaseView implements IGameRules, Constant {
     private int hint_pointer_y = 5;
     private boolean is_hint_pointer_blinking;
 
-
+    private AnimatedSprite mAnimation;
 
     public GameWorld(Context context) {
         super(context);
@@ -64,6 +66,7 @@ public class GameWorld extends BaseView implements IGameRules, Constant {
 
     @Override
     public void init() {
+        mAnimation = new AnimatedSprite();
         reInit();
     }
 
@@ -86,6 +89,8 @@ public class GameWorld extends BaseView implements IGameRules, Constant {
         top_left_bell_w = BitmapFactory.decodeResource(getResources(), R.drawable.bell_1).getWidth();
         top_left_bell_h = BitmapFactory.decodeResource(getResources(), R.drawable.bell_1).getWidth();
         isTopLeftBellRinging = 0;
+
+        mAnimation.initAnim(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.sprite1),150,150,5,1,false,4);
     }
 
     @Override
@@ -96,8 +101,8 @@ public class GameWorld extends BaseView implements IGameRules, Constant {
             case KEYCODE_DPAD_LEFT:
                 return true;
             case KeyEvent.ACTION_UP:
-                return true;
-        }
+                    return true;
+            }
         return false;
     }
 
@@ -163,6 +168,8 @@ public class GameWorld extends BaseView implements IGameRules, Constant {
             isMalaVisible = true;
             isMalaDone = true;
         }
+
+        mAnimation.update(System.currentTimeMillis());
     }
 
 
@@ -248,6 +255,18 @@ public class GameWorld extends BaseView implements IGameRules, Constant {
 
         x = -1;
         y = -1;
+
+        int tile_size = 150;
+        int sprite_x = 0;
+        int sprite_y = 0;
+        int sprite_w = tile_size;
+        int sprite_h = tile_size;
+        int dest_x = 100;
+        int dest_y = 500;
+        //Rect dest = new Rect(dest_x,dest_y,dest_x+sprite_w,dest_y+sprite_h);
+       // canvas.drawBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.sprite1), new Rect(sprite_x,sprite_y,sprite_w,sprite_h) , dest, paint);
+
+        mAnimation.draw(canvas);
     }
 
 
